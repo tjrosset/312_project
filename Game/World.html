@@ -63,7 +63,7 @@ function updateOtherPlayer(x,y){
 }
 
 function parse(data){
-    
+
     var parsed = JSON.parse(data)
     for (var key in parsed) {
         if (parsed.hasOwnProperty(key)) {
@@ -91,13 +91,13 @@ function parse(data){
 
 }
 
+//json-server --watch players.json
 async function fetchData() {
 
     const response = await fetch('http://localhost:3000/players/');
     const data = await response.text();  
     
     JSONdata = data;
-
     /*
     var parsed = JSON.parse(data)
     for (var key in parsed) {
