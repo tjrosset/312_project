@@ -10,20 +10,24 @@ canvas {
 </style>
 </head>
 <body onload="startGame()">
+<p id = "coordinate"></p>
+<p id = "npc"></p>
 <script>
 
 var myGamePiece;
 
+var JSONdata = '{ "1": { "x": 213, "y": "422"}, "2": { "x": 234, "y": "500"} }'
+
 function startGame() {
-    myGamePiece = new component(30, 30, "blue", 10, 120);
+    myGamePiece = new component(30, 30, "blue", 1000, 1000);
     myGameArea.start();
 }
 
 var myGameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
-        this.canvas.width = 500;
-        this.canvas.height = 500;
+        this.canvas.width = window.innerWidth-100;
+        this.canvas.height = window.innerHeight-100;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.interval = setInterval(updateGameArea, 20);
@@ -38,23 +42,85 @@ function component(width, height, color, x, y) {
     this.height = height;
     this.speedX = 0;
     this.speedY = 0;
-    this.x = x;
-    this.y = y;    
+    this.x = 50;
+    this.y = 70;    
     this.update = function() {
         ctx = myGameArea.context;
         ctx.fillStyle = color;
         ctx.fillRect(this.x, this.y, this.width, this.height);
+        document.getElementById("coordinate").innerHTML = "X: " + this.x + " Y: " + this.y;
     }
     this.newPos = function() {
         this.x += this.speedX;
-        this.y += this.speedY;        
+        this.y += this.speedY;   
     }    
+}
+
+function updateOtherPlayer(x,y){
+    ctx = myGameArea.context;
+    ctx.fillStyle = "red";
+    ctx.fillRect(x, y, 30, 30);
+}
+
+function parse(data){
+
+    var parsed = JSON.parse(data)
+    for (var key in parsed) {
+        if (parsed.hasOwnProperty(key)) {
+            
+            for (i = 0; i < parsed.length; i++) {
+                updateOtherPlayer(parsed[i]['x'],parsed[i]['y'])
+            }
+            //console.log(parsed[0]['x'])
+            //updateOtherPlayer(parsed['x'],parsed['y'])
+        }
+    }
+
+    /*
+    var data = JSON.parse(JSONdata)
+    for (var key in data) {
+        if (data.hasOwnProperty(key)) {
+            //console.log(key + " -> " + data[key]);
+            //console.log(data[key]['x'])
+            //console.log(data[key]['y'])
+            updateOtherPlayer(data[key]['x'],data[key]['y'])
+        }
+    }
+    */
+
+
+}
+
+//json-server --watch players.json
+async function fetchData() {
+
+    const response = await fetch('http://localhost:3000/players/');
+    const data = await response.text();  
+    
+    JSONdata = data;
+    /*
+    var parsed = JSON.parse(data)
+    for (var key in parsed) {
+        if (parsed.hasOwnProperty(key)) {
+            
+            for (i = 0; i < parsed.length; i++) {
+                updateOtherPlayer(parsed[i]['x'],parsed[i]['y'])
+            }
+            //console.log(parsed[0]['x'])
+            //updateOtherPlayer(parsed['x'],parsed['y'])
+        }
+    }
+    //console.log(parsed[1]['y'])  
+    */
 }
 
 function updateGameArea() {
     myGameArea.clear();
     myGamePiece.newPos();    
     myGamePiece.update();
+    fetchData()
+    parse(JSONdata);
+    
 }
 
 function moveup() {
@@ -73,12 +139,18 @@ function moveright() {
         myGamePiece.speedX = 1; 
 }
 
+function stop() {
+        myGamePiece.speedX = 0; 
+        myGamePiece.speedY = 0;
+}
+
 </script>
 <div style="text-align:center;width:480px;">
-  <button onclick="moveup()">UP</button><br><br>
+  <button onclick="moveup()">UP</button>
   <button onclick="moveleft()">LEFT</button>
-  <button onclick="moveright()">RIGHT</button><br><br>
+  <button onclick="moveright()">RIGHT</button>
   <button onclick="movedown()">DOWN</button>
+  <button onclick="stop()">STOP</button>
 </div>
 
 </body>
