@@ -14,5 +14,11 @@ def home(request):
 
 def login(request):
     if request.method == "POST":
-        pass
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('Sucess')
+    else:
+        form = UserRegisterForm
+        
     return render(request, 'penguin/login.html')

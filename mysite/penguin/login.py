@@ -5,6 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 class UserRegisterForm(UserCreationForm):
     # UserCreationForm  does not include email attribute! 
     email = forms.EmailField(required=True)
-    class Meta:
+    
+    class Meta: # It's kinda like a inherited or super class
         model = User
         fields = ("username", "email", "password1", "password2")
