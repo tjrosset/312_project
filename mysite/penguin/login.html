@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>User Page ish</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+</head>
+<body>
+    {% if user.is_authenticated %}
+        <h1>You're logged in!</h1>
+        <h2>Welcome back! {{ user.username }}</h2>
+        <p>Settings</p>
+        <input type="checkbox" name="NightMode" id="">
+    {% else %}
+        <h1>You're not logged in!</h1>
+        Please register here
+        <form action="/register" method="post">
+            {{ form }}
+            <input type="submit" value="Submit">
+        </form>
+    {% endif %}
+</body>
+</html>
