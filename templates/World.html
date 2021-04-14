@@ -2,6 +2,8 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<p>Hello You have Logged in as {{ email }}</p>
+
 <style>
 canvas {
     border:1px solid #d3d3d3;
@@ -27,7 +29,7 @@ var myGameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
         this.canvas.width = window.innerWidth-100;
-        this.canvas.height = window.innerHeight-100;
+        this.canvas.height = window.innerHeight-200;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.interval = setInterval(updateGameArea, 20);
@@ -94,8 +96,8 @@ function parse(data){
 //json-server --watch players.json
 async function fetchData() {
 
-    const response = await fetch('http://localhost:3000/players/');
-    const data = await response.text();  
+    //const response = await fetch('http://localhost:3000/players/');
+    //const data = await response.text();  
     
     JSONdata = data;
     /*
@@ -118,8 +120,8 @@ function updateGameArea() {
     myGameArea.clear();
     myGamePiece.newPos();    
     myGamePiece.update();
-    fetchData()
-    parse(JSONdata);
+    //fetchData()
+    //parse(JSONdata);
     
 }
 
