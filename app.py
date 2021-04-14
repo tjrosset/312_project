@@ -2,6 +2,7 @@
 from flask import Flask, render_template, redirect, url_for, request, session
 import pymongo
 import bcrypt
+from flask_socketio import SocketIO
 
 
 client = pymongo.MongoClient("mongodb://localhost:27017/")
@@ -9,9 +10,24 @@ client = pymongo.MongoClient("mongodb://localhost:27017/")
 db = client.get_database('total_records')
 records = db.register
 
+player = {
+    "name": "",
+    "x_position": 100,
+    "y_position": 100
+}
+
+loggedInPlayers ={
+    "players": []
+}
+
+player.update({"name": "Billy", "x_position": 200, "y_position": 200})
+loggedInPlayers["players"].append(player)
+
+
 # create the application object
 app = Flask(__name__)
-app.secret_key = "testing"
+app.secret_key = "uyt$&%53dfJHJKru$%fg*()fit7d5"
+socketio = SocketIO(app)
 
 @app.route("/", methods=['post', 'get'])
 def index():
@@ -97,37 +113,20 @@ def logout():
     else:
         return render_template('index.html')
 
+def SendAllPosition():
+    socketio.emit('allPositions', loggedInPlayers["players"])
 
+@socketio.on('playerMoved')
+def handle_my_custom_event(position):
+    SendAllPosition()
+    #print('received new position: ' + str(position))
+
+@socketio.on('allPositions')
+def handle_my_custom_event(data):
+    emit('allPositions', data, broadcast=True)
+
+
+ 
 #end of code to run it
 if __name__ == "__main__":
-  app.run(host='0.0.0.0', port=8000)
-
-
-
-
-# # use decorators to link the function to a url
-# @app.route('/')
-# def home():
-#     return "Hello, World!"  # return a string
-
-# @app.route('/game')
-# def game():
-#     return render_template('World.html')
-
-# @app.route('/game')
-# def signup():
-#     return render_template('signup.html')
-
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     error = None
-#     if request.method == 'POST':
-#         if request.form['username'] != 'admin' or request.form['password'] != 'admin':
-#             error = 'Invalid Credentials. Please try again.'
-#         else:
-#             return redirect(url_for('game'))
-#     return render_template('login.html', error=error)
-
-# # start the server with the 'run()' method
-# if __name__ == '__main__':
-#     app.run(debug=True)
+    socketio.run(app, host='0.0.0.0', port=8000)
