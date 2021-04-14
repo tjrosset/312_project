@@ -3,8 +3,9 @@ from flask import Flask, render_template, redirect, url_for, request, session
 import pymongo
 import bcrypt
 
-#client = pymongo.MongoClient("mongodb://localhost:27017/")
-client = pymongo.MongoClient("mongo:27017")
+
+client = pymongo.MongoClient("mongodb://localhost:27017/")
+#client = pymongo.MongoClient("mongo:27017")
 db = client.get_database('total_records')
 records = db.register
 
@@ -37,7 +38,7 @@ def index():
             return render_template('index.html', message=message)
         else:
             hashed = bcrypt.hashpw(password2.encode('utf-8'), bcrypt.gensalt())
-            user_input = {'name': user, 'email': email, 'password': hashed}
+            user_input = {'name': user, 'email': email, 'password': hashed, 'x_position': 100, 'y_position': 100}
             records.insert_one(user_input)
             
             user_data = records.find_one({"email": email})
@@ -83,7 +84,8 @@ def game():
 def logged_in():
     if "email" in session:
         email = session["email"]
-        return render_template('World.html', email=email)
+        userInfo = list(records.find({"email":email}))
+        return render_template('World.html', name=userInfo[0]["name"])
     else:
         return redirect(url_for("login"))
 

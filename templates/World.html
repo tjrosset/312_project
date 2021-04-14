@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<p>Hello You have Logged in as {{ email }}</p>
+<p>Hello You have Logged in as {{ name }}</p>
 
 <style>
 canvas {
@@ -17,8 +17,6 @@ canvas {
 <script>
 
 var myGamePiece;
-
-var JSONdata = '{ "1": { "x": 213, "y": "422"}, "2": { "x": 234, "y": "500"} }'
 
 function startGame() {
     myGamePiece = new component(30, 30, "blue", 1000, 1000);
@@ -96,8 +94,8 @@ function parse(data){
 //json-server --watch players.json
 async function fetchData() {
 
-    //const response = await fetch('http://localhost:3000/players/');
-    //const data = await response.text();  
+    const response = await fetch('http://localhost:3000//');
+    const data = await response.text();  
     
     JSONdata = data;
     /*
@@ -119,10 +117,7 @@ async function fetchData() {
 function updateGameArea() {
     myGameArea.clear();
     myGamePiece.newPos();    
-    myGamePiece.update();
-    //fetchData()
-    //parse(JSONdata);
-    
+    myGamePiece.update();    
 }
 
 function moveup() {
