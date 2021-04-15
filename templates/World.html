@@ -6,7 +6,8 @@
 
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<p>Hello You have Logged in as {{ name }}</p>
+<p>Hello You have Logged in as </p>
+<p id ="name">{{ name }}</p>
 
 <style>
 canvas {
@@ -15,21 +16,15 @@ canvas {
 }
 </style>
 </head>
-<body onload="startGame()">
+<body onload="connect()">
 <p id = "coordinate"></p>
 <p id = "npc"></p>
 
 <script>
 
 var myGamePiece;
-var otherplayers;
-
-
-function startGame() {
-    myGamePiece = new component(30, 30, "blue", 1000, 1000);
-    myGameArea.start();
-    connect();
-}
+var otherplayers = "";
+var myName = document.getElementById("name").innerHTML;
 
 var myGameArea = {
     canvas : document.createElement("canvas"),
@@ -38,7 +33,7 @@ var myGameArea = {
         this.canvas.height = window.innerHeight-200;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-        this.interval = setInterval(updateGameArea, 20);
+        this.interval = setInterval(updateGameArea, 100);
     },
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -50,34 +45,46 @@ function component(width, height, color, x, y) {
     this.height = height;
     this.speedX = 0;
     this.speedY = 0;
-    this.x = 100;
-    this.y = 100;    
+
+    this.position = function() {
+        if( otherplayers != ""){
+            this.x = otherplayers[myName]["x_position"];
+            this.y = otherplayers[myName]["y_position"];    
+        }
+    }
+
     this.update = function() {
         ctx = myGameArea.context;
         ctx.fillStyle = color;
         ctx.fillRect(this.x, this.y, this.width, this.height);
-        document.getElementById("coordinate").innerHTML = "X: " + this.x + " Y: " + this.y;
+        if(otherplayers != ""){
+            document.getElementById("coordinate").innerHTML = "X: " + this.x + " Y: " + this.y;
+        }
         updatePosition(this.x, this.y)
     }
-    this.newPos = function() {
+
+     this.newPos = function() {
         this.x += this.speedX;
         this.y += this.speedY;   
     }    
-
 }
 
 
 var socket = io();
 
 function updateGameArea() {
-    myGameArea.clear();
-    myGamePiece.newPos();    
-    myGamePiece.update();
+    if(otherplayers != ""){
+        myGameArea.clear();
+        myGamePiece.position();
+        myGamePiece.newPos();    
+        myGamePiece.update();
+    }
 
-    otherplayers.forEach(element => 
-        updateOtherPlayer(element["name"],element["x_position"],element["y_position"])
-    );
-
+    for(let player in otherplayers){
+        if(myName != player){
+            updateOtherPlayer(player,otherplayers[player]["x_position"],otherplayers[player]["y_position"])
+        }
+    }
 }
 
 function moveup() {
@@ -103,6 +110,7 @@ function stop() {
 
 function updatePosition(x, y){
     socket.emit('playerMoved',{
+        name: myName,
         x_position: x,
         y_position: y
     })
@@ -122,7 +130,11 @@ function connect(){
     socket.on( 'allPositions', function(players) {
         otherplayers = players;
     })
+    socket.emit('SavedPosition')
 }
+
+myGamePiece = new component(30, 30, "blue", 1000, 1000);
+myGameArea.start();
 
 </script>
 

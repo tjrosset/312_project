@@ -5,23 +5,20 @@ import bcrypt
 from flask_socketio import SocketIO
 
 
-client = pymongo.MongoClient("mongodb://localhost:27017/")
-#client = pymongo.MongoClient("mongo:27017")
+#client = pymongo.MongoClient("mongodb://localhost:27017/")
+client = pymongo.MongoClient("mongo:27017")
 db = client.get_database('total_records')
 records = db.register
 
 player = {
-    "name": "",
     "x_position": 100,
     "y_position": 100
 }
 
-loggedInPlayers ={
-    "players": []
-}
+loggedInPlayers ={}
 
-player.update({"name": "Billy", "x_position": 200, "y_position": 200})
-loggedInPlayers["players"].append(player)
+player.update({"x_position": 200, "y_position": 200})
+loggedInPlayers["Billy"] = player
 
 
 # create the application object
@@ -72,7 +69,6 @@ def login():
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
-
        
         email_found = records.find_one({"email": email})
         if email_found:
@@ -101,6 +97,15 @@ def logged_in():
     if "email" in session:
         email = session["email"]
         userInfo = list(records.find({"email":email}))
+
+        if(len(userInfo) == 0):
+            session.pop("email", None)
+            return redirect(url_for("login"))
+
+        player = dict()
+        player.update({"x_position": userInfo[0]["x_position"], "y_position": userInfo[0]["y_position"]})        
+        loggedInPlayers[userInfo[0]["name"]] = player
+
         return render_template('World.html', name=userInfo[0]["name"])
     else:
         return redirect(url_for("login"))
@@ -108,17 +113,29 @@ def logged_in():
 @app.route("/logout", methods=["POST", "GET"])
 def logout():
     if "email" in session:
+        email = session["email"]
         session.pop("email", None)
+        
+        userInfo = list(records.find({"email":email}))
+        records.update_one({"email": email },{ "$set":{"x_position": loggedInPlayers[userInfo[0]["name"]]["x_position"], "y_position": loggedInPlayers[userInfo[0]["name"]]["y_position"] } })
+        userInfo = list(records.find({"email":email}))
+
+        del loggedInPlayers[userInfo[0]["name"]]
         return render_template("logout.html")
     else:
         return render_template('index.html')
 
-def SendAllPosition():
-    socketio.emit('allPositions', loggedInPlayers["players"])
+def SendAllPosition(position):
+    loggedInPlayers[position["name"]].update({"x_position": position["x_position"], "y_position": position["y_position"]})
+    socketio.emit('allPositions', loggedInPlayers)
+
+@socketio.on('SavedPosition')
+def handle_my_custom_event():
+    socketio.emit('allPositions', loggedInPlayers)
 
 @socketio.on('playerMoved')
 def handle_my_custom_event(position):
-    SendAllPosition()
+    SendAllPosition(position)
     #print('received new position: ' + str(position))
 
 @socketio.on('allPositions')
