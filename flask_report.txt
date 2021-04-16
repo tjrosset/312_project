@@ -1,0 +1,12 @@
+Flask is a lightweight python web application framework that allows developers to focus on the web application istself by simplifying the backend. Using the flask framework will help our team in a variety of different ways. It will handle both HTTP requests and HTTP responses for us, which will make serving content to our users much easier. It will also make the implentation of authentication smoother and simpler with its use of sessions. We will store the user information on login in a session. This information will be used to send information between sockets and display who is online. The sessions will also make logout a breeze as we can just pop the user info on logout.
+
+HTTP REQUESTS
+https://flask.palletsprojects.com/en/1.1.x/api/?highlight=http%20response#flask.Flask.response_class
+Flask uses a library called Werkzeug to handle WSGI details.
+The Flask API contains two classes that handle requests and responses, flask.Request() and flask.Response(). Both are built off of the Werkzeug library.
+The request class uses a WSGI environment to communicate with the server. When it recieves a resquest, that request will stored in a global variable named request to be used elsewhere.
+The response object that flask builds its responses using a header object, status codes, status strings, and a mimetype.
+
+
+AUTHENTICATION AND SESSIONS
+Flask uses its own sessions to store data to be used between multiple server requests. Flasks sessions are created using signed cookies. The session object itself is stored as a dictionary object which will allow you to access your stored data using key value pairs. Sessions are only able to be used if the flask application has a secret key set. The session information cannot be changed if the secret key is not known.
