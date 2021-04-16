@@ -138,13 +138,29 @@ myGameArea.start();
 
 </script>
 
-<div style="text-align:center;width:480px;">
-  <button onclick="moveup()">UP</button>
-  <button onclick="moveleft()">LEFT</button>
-  <button onclick="moveright()">RIGHT</button>
-  <button onclick="movedown()">DOWN</button>
-  <button onclick="stop()">STOP</button>
+<div style="background-color: lightslategrey; display: flex; flex-direction: row; padding: 10px; justify-content: space-between;">
+    <div style="text-align:center; width:480px; background-color: lightblue; width: 175px; height: 132px;">
+        <b style="text-decoration: underline;">Movement Controls</b>
+        <div style="display: flex; justify-content: center; ">
+            <button onclick="moveup()">UP</button>
+        </div>
+        <div style="display: flex; width: 100%; justify-content: space-between; padding-top: 5px; padding-bottom: 5px;">
+            <button onclick="moveleft()">LEFT</button>
+            <button onclick="moveright()">RIGHT</button>
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <button onclick="movedown()">DOWN</button>
+        </div>
+        <br>
+        <button onclick="stop()">STOP</button>
+    </div>
+      
+    <button id="logout_button">Logout</button>
+    <script>
+    $('#logout_button').on('click', function() { window.location = '/logout'; });
+    </script>
 </div>
+
 
 
 
