@@ -125,7 +125,11 @@ def profile():
 
             if 'file' not in request.files:
                 message += "No File Uploaded."
+<<<<<<< HEAD
             elif request.files['file'].rsplit('.',1) in legal_extensions:
+=======
+            elif file in request.files and request.files['file'].split('.')[1] in legal_extensions:
+>>>>>>> c9ead1507ce97bf6e8cfe48ffa6fdd93e20cfdf6
                 file = request.files['file']
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER']),filename)
