@@ -132,7 +132,7 @@ def profile():
                 newval = {"$set":{"picture":filename}}
                 records.update_one({"email": email},newval)
                 message += "Picture Upload Successful!"
-            
+            # Dark Mode
             return render_template('profile.html', message=message)
         else:
             return redirect(url_for('404.html'))
