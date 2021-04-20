@@ -3,6 +3,8 @@ from flask import Flask, render_template, redirect, url_for, request, session
 import pymongo
 import bcrypt
 from flask_socketio import SocketIO
+import os
+from werkzeug.utils import secure_filename
 
 
 #client = pymongo.MongoClient("mongodb://localhost:27017/")
@@ -25,6 +27,7 @@ loggedInPlayers["Billy"] = player
 app = Flask(__name__)
 app.secret_key = "uyt$&%53dfJHJKru$%fg*()fit7d5"
 socketio = SocketIO(app)
+app.config['UPLOAD_FOLDER'] = '/uploads/'
 
 @app.route("/", methods=['post', 'get'])
 def index():
@@ -87,6 +90,60 @@ def login():
             message = 'Email not found'
             return render_template('login.html', message=message)
     return render_template('login.html', message=message)
+
+
+@app.route('/profile')
+def profile():
+    if request.method == "POST":
+        if 'email' in session:
+            legal_extensions = {'png', 'jpg', 'jpeg'}
+            
+            message = "Changes Completed!"
+            newemail = request.form.get("newemail")
+            newpassword = request.form.get("newpassword")
+            picture = request.form.get("picture")
+
+            user = records.find_one({"email": email})     
+            userid = user["_id"]
+            oldpassword = user['password']   
+            emailexists = records.find_one({"email": newemail})
+
+            if emailexists:
+                message += "Error Email already Exists!"
+            elif newemail:
+                newval = {"$set":{"email":newemail}} # query
+                records.update_one({"email": email},newval)
+                message += "New Email Successful!"
+
+            if bcrypt.checkpw(oldpassword, newpassword):
+                message += "Error Old Password can't be the same as New Password!"
+            elif newpassword:
+                user['password'] = bcrypt.hashpw(newpassword.encode('utf-8'), bcrypt.gensalt())
+                newval = {"$set":{"pass":hash}}
+                records.update_one({"email": email},newval)
+                message += "New Password Successful!"
+
+            if 'file' not in request.files:
+                message += "No File Uploaded."
+            elif request.files['file'].rsplit('.',1) in legal_extensions:
+                file = request.files['file']
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER']),filename)
+                newval = {"$set":{"picture":filename}}
+                records.update_one({"email": email},newval)
+                message += "Picture Upload Successful!"
+            # Dark Mode
+            return render_template('profile.html', message=message)
+        else:
+            return redirect(url_for('404.html'))
+
+    if 'email' in session:
+        username = session['username']
+        email = session['email']
+        picture = session.get('picture') # None.jpeg
+        return render_template('profile.html', user=username, email=email, picture=picture)
+    
+    return redirect(url_for('404.html'))
 
 @app.route('/game')
 def game():
