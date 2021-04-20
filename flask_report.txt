@@ -1,12 +1,98 @@
-Flask is a lightweight python web application framework that allows developers to focus on the web application istself by simplifying the backend. Using the flask framework will help our team in a variety of different ways. It will handle both HTTP requests and HTTP responses for us, which will make serving content to our users much easier. It will also make the implentation of authentication smoother and simpler with its use of sessions. We will store the user information on login in a session. This information will be used to send information between sockets and display who is online. The sessions will also make logout a breeze as we can just pop the user info on logout.
+Flask is a lightweight python web application framework that allows developers to focus on the web application istself by simplifying the backend. Using the flask framework will help our team in a variety of different ways. 
+It will handle both HTTP requests and HTTP responses for us, which will make serving content to our users much easier. 
+Flask will also handle HTTP exceptions for us as well. It will also make the implentation of authentication smoother and simpler with its use encoding of sessions. 
+We will store the user information on login in a session. This information will be used to send information between sockets and display who is online. 
+The sessions will also make logout a breeze as we can just pop the user info from the session on logout.
 
 HTTP REQUESTS
 https://flask.palletsprojects.com/en/1.1.x/api/?highlight=http%20response#flask.Flask.response_class
+https://github.com/pallets/flask/blob/master/src/flask/helpers.py
+https://github.com/pallets/flask/blob/master/src/flask/views.py
 Flask uses a library called Werkzeug to handle WSGI details.
 The Flask API contains two classes that handle requests and responses, flask.Request() and flask.Response(). Both are built off of the Werkzeug library.
 The request class uses a WSGI environment to communicate with the server. When it recieves a resquest, that request will stored in a global variable named request to be used elsewhere.
 The response object that flask builds its responses using a header object, status codes, status strings, and a mimetype.
 
+	Responses:
+	def make_response(*args):
+		"""Sometimes it is necessary to set additional headers in a view.  Because
+		views do not have to return response objects but can return a value that
+		is converted into a response object by Flask itself, it becomes tricky to
+		add headers to it.  This function can be called instead of using a return
+		and you will get a response object which you can use to attach headers.
+		If view looked like this and you want to add a new header::
+			def index():
+				return render_template('index.html', foo=42)
+		You can now do something like this::
+			def index():
+				response = make_response(render_template('index.html', foo=42))
+				response.headers['X-Parachutes'] = 'parachutes are cool'
+				return response
+		This function accepts the very same arguments you can return from a
+		view function.  This for example creates a response with a 404 error
+		code::
+			response = make_response(render_template('not_found.html'), 404)
+		The other use case of this function is to force the return value of a
+		view function into a response which is helpful with view
+		decorators::
+			response = make_response(view_function())
+			response.headers['X-Parachutes'] = 'parachutes are cool'
+		Internally this function does the following things:
+		-   if no arguments are passed, it creates a new response argument
+		-   if one argument is passed, :meth:`flask.Flask.make_response`
+			is invoked with it.
+		-   if more than one argument is passed, the arguments are passed
+			to the :meth:`flask.Flask.make_response` function as tuple.
+		.. versionadded:: 0.6
+		"""
+		if not args:
+			return current_app.response_class()
+		if len(args) == 1:
+			args = args[0]
+		return current_app.make_response(args)
+	
+	Exceptions:
+    def handle_http_exception(self, e):
+        """Handles an HTTP exception.  By default this will invoke the
+        registered error handlers and fall back to returning the
+        exception as response.
+        .. versionchanged:: 1.0.3
+            ``RoutingException``, used internally for actions such as
+             slash redirects during routing, is not passed to error
+             handlers.
+        .. versionchanged:: 1.0
+            Exceptions are looked up by code *and* by MRO, so
+            ``HTTPExcpetion`` subclasses can be handled with a catch-all
+            handler for the base ``HTTPException``.
+        .. versionadded:: 0.3
+        """
+        # Proxy exceptions don't have error codes.  We want to always return
+        # those unchanged as errors
+        if e.code is None:
+            return e
+
+        # RoutingExceptions are used internally to trigger routing
+        # actions, such as slash redirects raising RequestRedirect. They
+        # are not raised or handled in user code.
+        if isinstance(e, RoutingException):
+            return e
+
+        handler = self._find_error_handler(e)
+        if handler is None:
+            return e
+        return handler(e)
+
 
 AUTHENTICATION AND SESSIONS
-Flask uses its own sessions to store data to be used between multiple server requests. Flasks sessions are created using signed cookies. The session object itself is stored as a dictionary object which will allow you to access your stored data using key value pairs. Sessions are only able to be used if the flask application has a secret key set. The session information cannot be changed if the secret key is not known.
+https://github.com/pallets/flask/blob/master/src/flask/sessions.py
+Flask uses its own sessions to store data to be used between multiple server requests. Flasks sessions are created using signed cookies. 
+The session object itself is stored as a dictionary object which will allow you to access your stored data using key value pairs. Sessions are only able to be used if the flask application has a secret key set. 
+The session information cannot be changed if the secret key is not known this is because when Flask encodes this cookie with the secret string you provide it into a base64 encoding.
+
+LISCENSES
+Flask is licensed under a BSD License. The copywrite was established in 2015 by Armin Ronacher and contributers. 
+Any modifications and redistributions of flask are allowed as long as a set of rules are followed. 
+These rules are as follows, "Redistributions of source code must retain the above copyright notice, this list of conditions and the 
+following disclaimer.", "Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the 
+following disclaimer in the documentation and/or other materials provided with the distribution.", and "The names of the contributors may not be 
+used to endorse or promote products derived from this software without specific prior written permission."

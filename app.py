@@ -90,6 +90,15 @@ def login():
 
 @app.route('/game')
 def game():
+    if email.find('&') != -1:
+        email.replace('&','&amp')
+
+    if email.find('>') != -1:
+        email.replace('>','&gt')
+
+    if email.find('<') != -1:
+        email.replace('<','&lt')
+
     return render_template('World.html', email=email)
 
 @app.route('/logged_in')
