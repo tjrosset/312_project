@@ -125,7 +125,7 @@ def profile():
 
             if 'file' not in request.files:
                 message += "No File Uploaded."
-            elif file in request.files and request.files['file'].split('.')[1] in legal_extensions:
+            elif request.files['file'].rsplit('.',1)[1] in legal_extensions:
                 file = request.files['file']
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER']),filename)
@@ -143,7 +143,7 @@ def profile():
         picture = session.get('picture') # None.jpeg
         return render_template('profile.html', user=username, email=email, picture=picture)
     
-    return redirect(url_for('404.html'))
+    return render_template('profile.html')
 
 @app.route('/game')
 def game():
