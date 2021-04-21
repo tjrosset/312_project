@@ -7,8 +7,8 @@ import os
 from werkzeug.utils import secure_filename
 
 
-client = pymongo.MongoClient("mongodb://localhost:27017/")
-#client = pymongo.MongoClient("mongo:27017")
+#client = pymongo.MongoClient("mongodb://localhost:27017/")
+client = pymongo.MongoClient("mongo:27017")
 db = client.get_database('total_records')
 records = db.register
 
