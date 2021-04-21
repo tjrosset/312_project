@@ -1,6 +1,6 @@
-Flask is a lightweight python web application framework that allows developers to focus on the web application istself by simplifying the backend. Using the flask framework will help our team in a variety of different ways. 
+Flask is a lightweight python web application framework that allows developers to focus on the web application itself by simplifying the backend. Using the flask framework will help our team in a variety of different ways. 
 It will handle both HTTP requests and HTTP responses for us, which will make serving content to our users much easier. 
-Flask will also handle HTTP exceptions for us as well. It will also make the implentation of authentication smoother and simpler with its use encoding of sessions. 
+Flask will also handle HTTP exceptions for us as well. It will also make the implantation of authentication smoother and simpler with its use encoding of sessions. 
 We will store the user information on login in a session. This information will be used to send information between sockets and display who is online. 
 The sessions will also make logout a breeze as we can just pop the user info from the session on logout.
 
@@ -10,7 +10,7 @@ https://github.com/pallets/flask/blob/master/src/flask/helpers.py
 https://github.com/pallets/flask/blob/master/src/flask/views.py
 Flask uses a library called Werkzeug to handle WSGI details.
 The Flask API contains two classes that handle requests and responses, flask.Request() and flask.Response(). Both are built off of the Werkzeug library.
-The request class uses a WSGI environment to communicate with the server. When it recieves a resquest, that request will stored in a global variable named request to be used elsewhere.
+The request class uses a WSGI environment to communicate with the server. When it receives a request, that request will stored in a global variable named request to be used elsewhere.
 The response object that flask builds its responses using a header object, status codes, status strings, and a mimetype.
 
 	Responses:

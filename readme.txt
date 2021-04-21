@@ -4,6 +4,3 @@ Manually change address to http://localhost:8080/logout to logout.
 
 Use NavBar in Top Right Corner to switch between Register and Login
 
-
-Login/Registration 
-https://github.com/Mozes721/Flask_registery_mongo
