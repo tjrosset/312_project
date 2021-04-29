@@ -8,6 +8,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <p>Hello You have Logged in as </p>
 <p id ="name">{{ name }}</p>
+<p id ="msg"> <button onclick="myFunction()">Reply</button> </p>
+
+<form action="" method="POST">
+    <input type="text" class="username" placeholder="Send to UserName"/>
+    <input type="text" class="message" placeholder="Message"/>
+    <input type="submit" value="Message"/>
+</form>
 
 <style>
 canvas {
@@ -25,6 +32,8 @@ canvas {
 var myGamePiece;
 var otherplayers = "";
 var myName = document.getElementById("name").innerHTML;
+var messages = []
+var myMessage = ""
 
 var myGameArea = {
     canvas : document.createElement("canvas"),
@@ -57,6 +66,12 @@ function component(width, height, color, x, y) {
         ctx = myGameArea.context;
         ctx.fillStyle = color;
         ctx.fillRect(this.x, this.y, this.width, this.height);
+        
+        console.log(myMessage)
+        ctx.font = "20px Arial";
+        ctx.fillText(myName, x-10, y-20);
+        document.getElementById("msg").innerHTML = myMessage
+
         if(otherplayers != ""){
             document.getElementById("coordinate").innerHTML = "X: " + this.x + " Y: " + this.y;
         }
@@ -85,6 +100,21 @@ function updateGameArea() {
             updateOtherPlayer(player,otherplayers[player]["x_position"],otherplayers[player]["y_position"])
         }
     }
+    if(messages.length != 0){
+        messages.forEach(player => {
+            if(myName == player["name"]){
+                myMessage = "From " + player["sender"] + ": " + player["message"]
+                return
+            }
+            else{
+                myMessage = ""
+            }
+        })
+    }
+    else{
+        myMessage = ""
+    }
+    
 }
 
 function moveup() {
@@ -124,6 +154,8 @@ function updateOtherPlayer(name,x,y){
     ctx.fillText(name, x-10, y-20);
 }
 
+
+
 function connect(){
     socket.on('connect', function() {
     });
@@ -131,6 +163,28 @@ function connect(){
         otherplayers = players;
     })
     socket.emit('SavedPosition')
+
+    var form = $( 'form' ).on( 'submit', function( e ) {
+        e.preventDefault()
+        let username = $( 'input.username' ).val()
+        let msg = $( 'input.message' ).val()
+        socket.emit( 'Message', {
+            name : username,
+            message : msg,
+            sender: myName
+        } )
+        $( 'input.message' ).val( '' ).focus()
+    } )
+
+    socket.on('response', function( msg ) {
+        messages.push(msg)
+    })
+
+    setInterval(function(){ 
+       if(messages.length != 0){
+           messages.shift()
+       }
+    }, 10000);
 }
 
 myGamePiece = new component(30, 30, "blue", 1000, 1000);

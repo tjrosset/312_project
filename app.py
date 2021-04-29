@@ -7,8 +7,8 @@ import os
 from werkzeug.utils import secure_filename
 
 
-#client = pymongo.MongoClient("mongodb://localhost:27017/")
-client = pymongo.MongoClient("mongo:27017")
+client = pymongo.MongoClient("mongodb://localhost:27017/")
+#client = pymongo.MongoClient("mongo:27017")
 db = client.get_database('total_records')
 records = db.register
 
@@ -207,6 +207,10 @@ def handle_my_custom_event(position):
 @socketio.on('allPositions')
 def handle_my_custom_event(data):
     emit('allPositions', data, broadcast=True)
+
+@socketio.on('Message')
+def handle_my_custom_event(json, methods=['GET', 'POST']):
+    socketio.emit('response', json)
 
 
  
