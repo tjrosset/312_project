@@ -1,86 +1,39 @@
-Flask is a lightweight python web application framework that allows developers to focus on the web application itself by simplifying the backend. Using the flask framework will help our team in a variety of different ways. 
-It will handle both HTTP requests and HTTP responses for us, which will make serving content to our users much easier. 
-Flask will also handle HTTP exceptions for us as well. It will also make the implantation of authentication smoother and simpler with its use encoding of sessions. 
+Flask is a lightweight python web application framework that allows developers to focus on the web application istself by simplifying the backend. Using the flask framework will help our team in a variety of different ways. 
+It will parse incoming request information for us as well as build response requests for us. This will make serving content to the user much easier.
+Flask also allows us to serve static files with little work. This will help for images/css files.
+Flask will handle HTTP exceptions for us as well. It will also make the implentation of authentication smoother and simpler with its use encoding of sessions.
 We will store the user information on login in a session. This information will be used to send information between sockets and display who is online. 
 The sessions will also make logout a breeze as we can just pop the user info from the session on logout.
+Another thing that flask does for us is both handles and creates TCP connections.
 
-HTTP REQUESTS
-https://flask.palletsprojects.com/en/1.1.x/api/?highlight=http%20response#flask.Flask.response_class
-https://github.com/pallets/flask/blob/master/src/flask/helpers.py
-https://github.com/pallets/flask/blob/master/src/flask/views.py
-Flask uses a library called Werkzeug to handle WSGI details.
-The Flask API contains two classes that handle requests and responses, flask.Request() and flask.Response(). Both are built off of the Werkzeug library.
-The request class uses a WSGI environment to communicate with the server. When it receives a request, that request will stored in a global variable named request to be used elsewhere.
-The response object that flask builds its responses using a header object, status codes, status strings, and a mimetype.
+Flask URL:
+LINK: https://github.com/pallets/flask/blob/3c9b85469ef4abda1e996a5ec0e7bef0f1a0b394/src/flask/app.py#L1032 
+Flask will build the url path by using the information given by the user in the decorator. @app.route('/'). 
+This decorator uses add_url_rule(). This binds a url to the function that will decide what occurs on that path. 
+This method will also allow us to pick and choose what http method can be used on this path.
 
-	Responses:
-	def make_response(*args):
-		"""Sometimes it is necessary to set additional headers in a view.  Because
-		views do not have to return response objects but can return a value that
-		is converted into a response object by Flask itself, it becomes tricky to
-		add headers to it.  This function can be called instead of using a return
-		and you will get a response object which you can use to attach headers.
-		If view looked like this and you want to add a new header::
-			def index():
-				return render_template('index.html', foo=42)
-		You can now do something like this::
-			def index():
-				response = make_response(render_template('index.html', foo=42))
-				response.headers['X-Parachutes'] = 'parachutes are cool'
-				return response
-		This function accepts the very same arguments you can return from a
-		view function.  This for example creates a response with a 404 error
-		code::
-			response = make_response(render_template('not_found.html'), 404)
-		The other use case of this function is to force the return value of a
-		view function into a response which is helpful with view
-		decorators::
-			response = make_response(view_function())
-			response.headers['X-Parachutes'] = 'parachutes are cool'
-		Internally this function does the following things:
-		-   if no arguments are passed, it creates a new response argument
-		-   if one argument is passed, :meth:`flask.Flask.make_response`
-			is invoked with it.
-		-   if more than one argument is passed, the arguments are passed
-			to the :meth:`flask.Flask.make_response` function as tuple.
-		.. versionadded:: 0.6
-		"""
-		if not args:
-			return current_app.response_class()
-		if len(args) == 1:
-			args = args[0]
-		return current_app.make_response(args)
-	
-	Exceptions:
-    def handle_http_exception(self, e):
-        """Handles an HTTP exception.  By default this will invoke the
-        registered error handlers and fall back to returning the
-        exception as response.
-        .. versionchanged:: 1.0.3
-            ``RoutingException``, used internally for actions such as
-             slash redirects during routing, is not passed to error
-             handlers.
-        .. versionchanged:: 1.0
-            Exceptions are looked up by code *and* by MRO, so
-            ``HTTPExcpetion`` subclasses can be handled with a catch-all
-            handler for the base ``HTTPException``.
-        .. versionadded:: 0.3
-        """
-        # Proxy exceptions don't have error codes.  We want to always return
-        # those unchanged as errors
-        if e.code is None:
-            return e
+HTTP Requests:
+Link request object: https://github.com/pallets/flask/blob/3c9b85469ef4abda1e996a5ec0e7bef0f1a0b394/src/flask/wrappers.py#L14
+LINK dispatching: https://github.com/pallets/flask/blob/3c9b85469ef4abda1e996a5ec0e7bef0f1a0b394/src/flask/app.py#L1463
+				  https://github.com/pallets/flask/blob/3c9b85469ef4abda1e996a5ec0e7bef0f1a0b394/src/flask/app.py#L1504
+When flask recieves a request from the server it will store it into a global object to be used elsewhere.
+The object that flask uses is from Werkzeug, but adds a couple more attributes of its own.
+The attributes that are provided by flask and werkzeug allow for http requests to be easily parsed by the user.
+Using finalize_request() flask will finish the http request by converting it into a response object, conduct postprocessing, and then send the response.
 
-        # RoutingExceptions are used internally to trigger routing
-        # actions, such as slash redirects raising RequestRedirect. They
-        # are not raised or handled in user code.
-        if isinstance(e, RoutingException):
-            return e
 
-        handler = self._find_error_handler(e)
-        if handler is None:
-            return e
-        return handler(e)
+HTTP Responses:
+Link Response object: https://github.com/pallets/flask/blob/3c9b85469ef4abda1e996a5ec0e7bef0f1a0b394/src/flask/wrappers.py#L101
+LINK dispatching: https://github.com/pallets/flask/blob/3c9b85469ef4abda1e996a5ec0e7bef0f1a0b394/src/flask/app.py#L1463
+				  https://github.com/pallets/flask/blob/3c9b85469ef4abda1e996a5ec0e7bef0f1a0b394/src/flask/app.py#L1504
+LINK Create response: https://github.com/pallets/flask/blob/3c9b85469ef4abda1e996a5ec0e7bef0f1a0b394/src/flask/app.py#L1616\
+LINK render_template: https://github.com/pallets/flask/blob/3c9b85469ef4abda1e996a5ec0e7bef0f1a0b394/src/flask/templating.py#L130
+Flask response objects are built off of the response objects from Werkzeug, but flask sets up responses to have the html mimetype by default (line 119 of object link)
+Flask uses make_response to create the http response using the value returned by the user at the end of the function. This will allow us to add our own headers to the response if needed.
+Using make_response is different then returning rernder_template.
+Render_template() will render the provided file using the JinjaLoader library.
+Using finalize_request() flask will finish the http request by converting it into a response object, conduct postprocessing, and then send the response.
+
 
 
 AUTHENTICATION AND SESSIONS
