@@ -103,7 +103,15 @@ function updateGameArea() {
     if(messages.length != 0){
         messages.forEach(player => {
             if(myName == player["name"]){
-                myMessage = "From " + player["sender"] + ": " + player["message"]
+                var ret = player["message"]
+                ret = ret.replaceAll('&','&amp')
+                ret = ret.replaceAll('>','&gt')
+                ret = ret.replaceAll('<','&lt')
+                var sentit = player["sender"]
+                sentit = sentit.replaceAll('&','&amp')
+                sentit = sentit.replaceAll('>','&gt')
+                sentit = sentit.replaceAll('<','&lt')
+                myMessage = "From " + sentit + ": " + ret
                 return
             }
             else{
@@ -169,8 +177,8 @@ function connect(){
         let username = $( 'input.username' ).val()
         let msg = $( 'input.message' ).val()
         socket.emit( 'Message', {
-            name : username,
-            message : msg,
+            name: username,
+            message: msg,
             sender: myName
         } )
         $( 'input.message' ).val( '' ).focus()
