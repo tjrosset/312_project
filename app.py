@@ -52,6 +52,10 @@ def index():
         if password1 != password2:
             message = 'Passwords should match!'
             return render_template('index.html', message=message)
+        if user.find('&')!= -1 or user.find('<')!= -1 or user.find('>')!= -1:
+            message = 'Username cannot contain these characters < > &'
+            return render_template('index.html', message=message)
+        
         else:
             hashed = bcrypt.hashpw(password2.encode('utf-8'), bcrypt.gensalt())
             user_input = {'name': user, 'email': email, 'password': hashed, 'x_position': 100, 'y_position': 100}
