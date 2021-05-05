@@ -1,4 +1,5 @@
 Website for Werkzeug: https://werkzeug.palletsprojects.com/en/1.0.x/
+Link to the Werkzeug github: https://github.com/pallets/werkzeug/tree/master/src/werkzeug
 
 Flask uses the Werkzeug library for a lot of its data handling in WSGI. In relation to what we use/saw, Werkzeug includes a response object that can wrap other WSGI applications and handle streaming data, and a routing system for matching URLs to endpoints and generating URLs for endpoints.
 The Werkzeug library handles tcp connections for flask. By defining our application as a flask app in the top of our code and running a form of their run command Werkzeug and flask will bind that connection to a tcp connection at the given hostname, port number and application to be executed (our app).
@@ -25,6 +26,18 @@ This function at this link is extended upon by flask. It is a shortcut to create
 
 --------
 Looking into its base_request.py it has functions dedicated to data buffer, headers, cookies, and query strings which were topics seen in Lecture. 
+
+
+
+License:
+Copyright 2007 Pallets
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 get_data():
 https://github.com/pallets/werkzeug/blob/d6e98a0105ea126f10c432d33f101ec793df6440/src/werkzeug/wrappers/base_request.py#L428
