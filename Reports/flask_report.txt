@@ -5,7 +5,7 @@ Flask also allows us to serve static files with little work. This will help for 
 Flask uses a previous library called Werkzeug to define its requests and responses as well as its parsing. (description for Werkzeug found in Reports)
 We will store the user information on login in a session. This information will be used to send information between sockets and display who is online. 
 The sessions will also make logout a breeze as we can just pop the user info from the session on logout.
-Another thing that flask does for us is both handles and creates TCP connections using WSGI. (description for WSGI found in Reports)
+Another thing that flask does for us is both handles and creates TCP connections using Werkzeug. (description for Werkzeug found in Reports)
 
 Flask URL:
 	LINK URL binder: 	https://github.com/pallets/flask/blob/3c9b85469ef4abda1e996a5ec0e7bef0f1a0b394/src/flask/app.py#L1032 
