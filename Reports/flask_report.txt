@@ -1,7 +1,7 @@
-Flask is a lightweight python web application framework that allows developers to focus on the web application istself by simplifying the backend. Using the flask framework will help our team in a variety of different ways. 
+Flask is a lightweight python web application framework that allows developers to focus on the web application itself by simplifying the backend. Using the flask framework will help our team in a variety of different ways. 
 It will parse incoming request information for us as well as build response requests for us. This will make serving content to the user much easier.
 Flask also allows us to serve static files with little work. This will help for images/css files.
-Flask will handle HTTP exceptions for us as well. It will also make the implentation of authentication smoother and simpler with its use encoding of sessions.
+Flask will handle HTTP exceptions for us as well. It will also make the implementation of authentication smoother and simpler with its use encoding of sessions.
 We will store the user information on login in a session. This information will be used to send information between sockets and display who is online. 
 The sessions will also make logout a breeze as we can just pop the user info from the session on logout.
 Another thing that flask does for us is both handles and creates TCP connections.
@@ -34,7 +34,8 @@ Using make_response is different then returning rernder_template.
 Render_template() will render the provided file using the JinjaLoader library.
 Using finalize_request() flask will finish the http request by converting it into a response object, conduct postprocessing, and then send the response.
 
-
+LINK finalize_request: https://github.com/pallets/flask/blob/29d33203d0325f006c75fc88359872bd68c8bdf5/src/flask/app.py#L1955
+LINK make_response: https://github.com/pallets/flask/blob/29d33203d0325f006c75fc88359872bd68c8bdf5/src/flask/app.py#L2019
 
 AUTHENTICATION AND SESSIONS
 https://github.com/pallets/flask/blob/master/src/flask/sessions.py

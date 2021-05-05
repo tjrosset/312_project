@@ -1,0 +1,8 @@
+The jinja library is a python templating language. A lot of the template functionality similar to what we saw in class can be seen in its parser file.
+
+https://github.com/pallets/jinja/blob/master/src/jinja2/parser.py
+
+It has a set of keywords it looks for (for, if, block) and has methods to handle different types, like for looping it uses its parse_for() method
+
+https://github.com/pallets/jinja/blob/da812816ff1a459eefa7ca946b4c108cc7106c85/src/jinja2/parser.py#L194 
+

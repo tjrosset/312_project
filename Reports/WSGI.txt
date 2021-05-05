@@ -1,0 +1,14 @@
+The documentation states that the Flask object implements a WSGI application to act as the central object. Once the application is passed to it, it will act as the central registry for the view functions (code you write to respond to requests), URL rules, template configuration and more. WSGI acts as the server and the application interface. 
+
+Requests are forwarded from the web server to the web application which is being ruined by the WSGI container. From there, HTML responses are passed back to the web server and to the requestor.
+
+
+Flask creates the Response object defined in its wrapper
+https://github.com/pallets/flask/blob/3c9b85469ef4abda1e996a5ec0e7bef0f1a0b394/src/flask/wrappers.py#L101
+
+We see the default mime type is "text/html" something we saw in Class.
+
+Flask creates the response:
+https://github.com/pallets/flask/blob/29d33203d0325f006c75fc88359872bd68c8bdf5/src/flask/app.py#L2019
+
+It returns the response object with its headers status, and the return value from a view function. 
