@@ -1,5 +1,29 @@
-Flask uses the Werkzeug library for a lot of its data handling in WSGI. In relation to what we use/saw, Werkzeug includes a response object that can wrap other WSGI applications and handle streaming data, and a routing system for matching URLs to endpoints and generating URLs for endpoints. 
+Website for Werkzeug: https://werkzeug.palletsprojects.com/en/1.0.x/
 
+Flask uses the Werkzeug library for a lot of its data handling in WSGI. In relation to what we use/saw, Werkzeug includes a response object that can wrap other WSGI applications and handle streaming data, and a routing system for matching URLs to endpoints and generating URLs for endpoints.
+The Werkzeug library handles tcp connections for flask. By defining our application as a flask app in the top of our code and running a form of their run command Werkzeug and flask will bind that connection to a tcp connection at the given hostname, port number and application to be executed (our app).
+Werkzeug is also the base of flasks url and function feature that allows a function to bind itself to a given url.
+https://werkzeug.palletsprojects.com/en/1.0.x/serving/?highlight=tcp
+
+There are also utilities that Werkzeug provides to help with security issues such as escape(string) Which will replace all html characters with thier escape character sto help prevent injections attacks. (https://github.com/pallets/werkzeug/blob/4848b99a3863e84b4f1969abfa58864431bdf2d5/src/werkzeug/utils.py#L477)
+
+-------
+https://github.com/pallets/werkzeug/blob/master/src/werkzeug/wsgi.py#L24
+The link above is the part of werkzeug that deals with most of the TCP connection details. Here there are functions that will help parse through incoming requests from the wsgi environment. To get the incoming data stream from the WSGI environment it uses get_input_stream() which will automatically recieve the stream and will omit it depending on its content length. Link to the this functions code is at https://github.com/pallets/werkzeug/blob/4848b99a3863e84b4f1969abfa58864431bdf2d5/src/werkzeug/wsgi.py#L141.
+
+--------
+https://github.com/pallets/werkzeug/blob/master/src/werkzeug/http.py#L393
+The link above is the part of Werkzeug that handles most http details. It has functions to parse different kinds of headers. Content-Length headers, accept headers, etc..
+It contains a list of all http status codes that will be used in parsing. 
+parse_list_header():
+https://github.com/pallets/werkzeug/blob/4848b99a3863e84b4f1969abfa58864431bdf2d5/src/werkzeug/http.py#L309
+The link above is to a function that is used to parse header values. It parses header values by seperating them based on commas, and quoted strings.
+
+--------
+https://github.com/pallets/werkzeug/blob/4848b99a3863e84b4f1969abfa58864431bdf2d5/src/werkzeug/utils.py#L525
+This function at this link is extended upon by flask. It is a shortcut to create a redirect response before sending it to the server. similar to the one that we were shown in lecture.
+
+--------
 Looking into its base_request.py it has functions dedicated to data buffer, headers, cookies, and query strings which were topics seen in Lecture. 
 
 get_data():
