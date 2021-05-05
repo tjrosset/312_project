@@ -196,25 +196,30 @@ def logout():
         return render_template('index.html')
 
 def SendAllPosition(position):
-    loggedInPlayers[position["name"]].update({"x_position": position["x_position"], "y_position": position["y_position"]})
-    socketio.emit('allPositions', loggedInPlayers)
+    if "email" in session:
+        loggedInPlayers[position["name"]].update({"x_position": position["x_position"], "y_position": position["y_position"]})
+        socketio.emit('allPositions', loggedInPlayers)
 
 @socketio.on('SavedPosition')
 def handle_my_custom_event():
-    socketio.emit('allPositions', loggedInPlayers)
+    if "email" in session:
+        socketio.emit('allPositions', loggedInPlayers)
 
 @socketio.on('playerMoved')
 def handle_my_custom_event(position):
-    SendAllPosition(position)
+    if "email" in session:
+        SendAllPosition(position)
     #print('received new position: ' + str(position))
 
 @socketio.on('allPositions')
 def handle_my_custom_event(data):
-    emit('allPositions', data, broadcast=True)
+    if "email" in session:
+        emit('allPositions', data, broadcast=True)
 
 @socketio.on('Message')
 def handle_my_custom_event(json, methods=['GET', 'POST']):
-    socketio.emit('response', json)
+    if "email" in session:
+        socketio.emit('response', json)
 
 
  
