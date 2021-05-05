@@ -13,6 +13,8 @@ Flask URL:
 	
 	Flask will build the url path by using the information given by the user in the decorator. @app.route('/'). 
 	This decorator uses add_url_rule(). This binds a url to the function that will decide what occurs when the user accesses that path. 
+	The url rule is parsed and returned into a generator from the Werkzeug library.
+	Flask also uses url parsing from the Werkzeug library (report for Werkzeug library located in reports)
 
 
 HTTP Requests:
