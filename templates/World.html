@@ -216,10 +216,13 @@ myGameArea.start();
         <br>
         <button onclick="stop()">STOP</button>
     </div>
-      
+    <button id="profile_button">profile</button>
+    <script>
+        $('#profile_button').on('click', function() { window.location = '/profile'; });
+    </script>
     <button id="logout_button">Logout</button>
     <script>
-    $('#logout_button').on('click', function() { window.location = '/logout'; });
+        $('#logout_button').on('click', function() { window.location = '/logout'; });
     </script>
 </div>
 

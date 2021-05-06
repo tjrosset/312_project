@@ -96,7 +96,7 @@ def login():
     return render_template('login.html', message=message)
 
 
-@app.route('/profile')
+@app.route('/profile', methods=["POST", "GET"])
 def profile():
     if request.method == "POST":
         if 'email' in session:
@@ -139,15 +139,15 @@ def profile():
             # Dark Mode
             return render_template('profile.html', message=message)
         else:
-            return redirect(url_for('404.html'))
+            return redirect(url_for("login"))
 
     if 'email' in session:
-        username = session['username']
+        #username = session['username']  username is not stored in session
         email = session['email']
         picture = session.get('picture') # None.jpeg
-        return render_template('profile.html', user=username, email=email, picture=picture)
+        return render_template('profile.html', email=email, picture=picture)
     
-    return render_template('profile.html')
+    return redirect(url_for("login"))
 
 @app.route('/game')
 def game():
