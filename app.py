@@ -95,8 +95,23 @@ def login():
             return render_template('login.html', message=message)
     return render_template('login.html', message=message)
 
+@app.route('/uploads/<filename>')
+def uploads(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
+<<<<<<< Updated upstream
 @app.route('/profile')
+=======
+<<<<<<< Updated upstream
+@app.route('/uploads/<filename>')
+def uploads(filename):
+    return flask.send_from_directory(app.config['UPLOAD_FOLDER'],filename)
+
+@app.route('/profile', methods=["GET","POST"])
+=======
+@app.route('/profile', methods=["POST", "GET"])
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 def profile():
     if request.method == "POST":
         if 'email' in session:
