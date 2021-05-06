@@ -92,7 +92,11 @@ def login():
     return render_template('login.html', message=message)
 
 
-@app.route('/profile')
+@app.route('/uploads/<filename>')
+def uploads(filename):
+    return flask.send_from_directory(app.config['UPLOAD_FOLDER'],filename)
+
+@app.route('/profile', methods=["GET","POST"])
 def profile():
     if request.method == "POST":
         if 'email' in session:
@@ -126,16 +130,17 @@ def profile():
             if 'file' not in request.files:
                 message += "No File Uploaded."
             elif request.files['file'].rsplit('.',1)[1] in legal_extensions:
+                # Save File add path to db
                 file = request.files['file']
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER']),filename)
+
                 newval = {"$set":{"picture":filename}}
                 records.update_one({"email": email},newval)
                 message += "Picture Upload Successful!"
-            # Dark Mode
             return render_template('profile.html', message=message)
         else:
-            return redirect(url_for('404.html'))
+            return render_template('profile.html')
 
     if 'email' in session:
         username = session['username']
