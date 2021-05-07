@@ -1,24 +1,30 @@
 Website for Werkzeug: https://werkzeug.palletsprojects.com/en/1.0.x/
 Link to the Werkzeug github: https://github.com/pallets/werkzeug/tree/master/src/werkzeug
 
-Flask uses the Werkzeug library for a lot of its data handling in WSGI. In relation to what we use/saw, Werkzeug includes a response object that can wrap other WSGI applications and handle streaming data, and a routing system for matching URLs to endpoints and generating URLs for endpoints.
-The Werkzeug library handles tcp connections for flask. By defining our application as a flask app in the top of our code and running a form of their run command Werkzeug and flask will bind that connection to a tcp connection at the given hostname, port number and application to be executed (our app).
-Werkzeug is also the base of flasks url and function feature that allows a function to bind itself to a given url.
+Flask uses the Werkzeug library for a lot of its data handling in WSGI. In relation to what we use/saw, Werkzeug includes a response object that can wrap other WSGI applications and handle streaming data,and a routing system for matching URLs to endpoints and generating URLs for endpoints. The Werkzeug library handles tcp connections for flask. By defining our application as a flask app in the top of our code and running a form of their run command Werkzeug and flask will bind that connection to a tcp connection at the given hostname, port number and application to be executed (our app). Werkzeug is also the base of flasks url and function feature that allows a function to bind itself to a given url.
 https://werkzeug.palletsprojects.com/en/1.0.x/serving/?highlight=tcp
 
-There are also utilities that Werkzeug provides to help with security issues such as escape(string) Which will replace all html characters with thier escape character sto help prevent injections attacks. (https://github.com/pallets/werkzeug/blob/4848b99a3863e84b4f1969abfa58864431bdf2d5/src/werkzeug/utils.py#L477)
+There are also utilities that Werkzeug provides to help with security issues such as escape(string) Which will replace all html characters with their 
+escape character stop help prevent injections attacks. (https://github.com/pallets/werkzeug/blob/4848b99a3863e84b4f1969abfa58864431bdf2d5/src/werkzeug/utils.py#L477)
 
 -------
 https://github.com/pallets/werkzeug/blob/master/src/werkzeug/wsgi.py#L24
-The link above is the part of werkzeug that deals with most of the TCP connection details. Here there are functions that will help parse through incoming requests from the wsgi environment. To get the incoming data stream from the WSGI environment it uses get_input_stream() which will automatically recieve the stream and will omit it depending on its content length. Link to the this functions code is at https://github.com/pallets/werkzeug/blob/4848b99a3863e84b4f1969abfa58864431bdf2d5/src/werkzeug/wsgi.py#L141.
+The link above is the part of werkzeug that deals with most of the TCP connection details. Here there are functions that will help parse through 
+incoming requests from the wsgi environment. To get the incoming data stream from the WSGI environment it uses get_input_stream() which will automatically 
+receive the stream and will omit it depending on its content length. 
+
+Link to the this functions code is at https://github.com/pallets/werkzeug/blob/4848b99a3863e84b4f1969abfa58864431bdf2d5/src/werkzeug/wsgi.py#L141.
 
 --------
 https://github.com/pallets/werkzeug/blob/master/src/werkzeug/http.py#L393
-The link above is the part of Werkzeug that handles most http details. It has functions to parse different kinds of headers. Content-Length headers, accept headers, etc..
+The link above is the part of Werkzeug that handles most http details. It has functions to parse different kinds of headers. 
+Content-Length headers, accept headers, etc..
+
 It contains a list of all http status codes that will be used in parsing. 
 parse_list_header():
 https://github.com/pallets/werkzeug/blob/4848b99a3863e84b4f1969abfa58864431bdf2d5/src/werkzeug/http.py#L309
-The link above is to a function that is used to parse header values. It parses header values by seperating them based on commas, and quoted strings.
+
+The link above is to a function that is used to parse header values. It parses header values by separating them based on commas, and quoted strings.
 
 --------
 https://github.com/pallets/werkzeug/blob/4848b99a3863e84b4f1969abfa58864431bdf2d5/src/werkzeug/utils.py#L525
@@ -55,5 +61,8 @@ Redistribution and use in source and binary forms, with or without modification,
 Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
 Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 

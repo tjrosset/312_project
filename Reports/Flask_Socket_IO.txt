@@ -2,17 +2,21 @@ Live Interaction Server Side:
 
 I am using socket.on, socket.run, and socket.emit. 
 
-Flask-SocketIP allows low latency bi-directional communication between client and server. It is compatible with client side SocketIO which is what we use to send player positions from our Game World. 
+Flask-SocketIP allows low latency bi-directional communication between client and server. It is compatible with client side SocketIO 
+which is what we use to send player positions from our Game World. 
 
-I am using Flask-SocketIO to establish multiple socket connections with my clients. More specifically, I need to establish a connection with a client that’s logged in and receive constant information on their position. 
+I am using Flask-SocketIO to establish multiple socket connections with my clients. More specifically, I need to establish a connection 
+with a client that is logged in and receive constant information on their position. 
 The Server must also broadcast or emit the position of every logged in client to each client so that they may render them in the Game World. 
-When a client establishes a connection, the server will also emit the position stored in the database which would be their previous location before logging out. 
+When a client establishes a connection, the server will also emit the position stored in the database which would be their previous location 
+before logging out. 
 
 Link for run(): https://github.com/miguelgrinberg/Flask-SocketIO/blob/2f1c322e687a8f7f080a081f042efdc6c8532123/flask_socketio/__init__.py#L518
-The web server is started calling socketio.run(), replacing app.run() in standard Flask development. The client must receive a page that loads the Socket.IO library to establish a connection. 
-Run() takes parameters such as a flask instance, a hostname, port number, and other arguements that vary depending on the server used.
-It also allows for a debug mode to be set.
-Within the function it defines another function called run_server(). This uses wsgi in order to start a server. It also handles errors such as runtime errors due to a invalid host/addresses
+The web server is started calling socketio.run(), replacing app.run() in standard Flask development. The client must receive a page that 
+loads the Socket.IO library to establish a connection. Run() takes parameters such as a flask instance, a hostname, port number, and other 
+arguments that vary depending on the server used. It also allows for a debug mode to be set.Within the function it defines another function called run_server(). 
+This uses wsgi in order to start a server. It also handles errors such as runtime errors due to a invalid host/addresses
+
 Example below:
 from flask import Flask, render_template
 from flask_socketio import SocketIO
@@ -26,12 +30,15 @@ if __name__ == '__main__':
 
 It will default to localhost and port 5000 if Host and Port are not specified. Next check the server.eio.async_mode. 
 The Engine IO is a transport protocol that enables real-time bidirectional communication between our server and clients.
-We are given three asynchronous models. Eventlet is a concurrent networking library that gives us the WebSocket transports. Gevent has long-polling transport but does not have WebSocket support. 
-It must rely on the gevent-websocket package or uWSGI to load our Flask application. Werkzeug can also be used but only for long-polling transport. 
-Messages are sent and received as events. Flask-SocketIO must register handlers for these events. For our sever we used events that’s just had 1 argument, a position JSON. 
+We are given three asynchronous models. Eventlet is a concurrent networking library that gives us the WebSocket transports. Gevent has long-polling 
+transport but does not have WebSocket support. It must rely on the gevent-websocket package or uWSGI to load our Flask application. Werkzeug can 
+also be used but only for long-polling transport.Messages are sent and received as events. Flask-SocketIO must register handlers for these events. 
+For our sever we used events that’s just had 1 argument, a position JSON. 
 
 LINK for socket.on(): https://github.com/miguelgrinberg/Flask-SocketIO/blob/2f1c322e687a8f7f080a081f042efdc6c8532123/flask_socketio/__init__.py#L260
-Socket.on() overwrites the decorator defined by flask and werkzeug. (app.route() => socketio.on()). This decorator must be used in order to bind a function to an event. The parameters for on() are the name of the message, and a namespace.
+Socket.on() overwrites the decorator defined by flask and werkzeug. (app.route() => socketio.on()). This decorator must be used in order to bind a 
+function to an event. The parameters for on() are the name of the message, and a namespace.
+
 Example below:
 @socketio.on('my event')
 def handle_my_custom_event(json):
@@ -40,11 +47,12 @@ def handle_my_custom_event(json):
 
 LINK for socket.emit(): https://github.com/miguelgrinberg/Flask-SocketIO/blob/2f1c322e687a8f7f080a081f042efdc6c8532123/flask_socketio/__init__.py#L403
 We use the emit() function to return messages backs to the client. It will emit the same namespace as the incoming message by default. 
-Emit has different options for parameters. It takes in the event name, a list of arguments, a broadcast arguement, and/or a list of users to recieve the message.
+Emit has different options for parameters. It takes in the event name, a list of arguments, a broadcast argument, and/or a list of users to receive the message.
 
 
-It’s important that out website broadcast our message so that all logged in clients can see the position of everyone in real-time. To turn a regular emit() to a broadcast we set the optional broadcast argument to True. 
-This will message all the clients connected to the socket, not just the sender. 
+It is important that out website broadcast our message so that all logged in clients can see the position of everyone in real-time. To turn a regular emit() 
+to a broadcast we set the optional broadcast argument to True. This will message all the clients connected to the socket, not just the sender. 
+
 Example of sending event to all connected clients:
 @socketio.on('my event')
 def handle_my_custom_event(data):
@@ -53,8 +61,6 @@ def handle_my_custom_event(data):
 Clients connected to the namespace will receive the message. 
 
 https://github.com/miguelgrinberg/Flask-SocketIO/blob/2f1c322e687a8f7f080a081f042efdc6c8532123/flask_socketio/namespace.py#L28
-
-
 
 
 
