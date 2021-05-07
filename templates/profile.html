@@ -1,21 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
-{% if message  %}
-        <h1>Hello! {{ user }}</h1>
-        <h1>Current Email : {{ email }}</h1>
-        <img src="{{ picture }}" alt="">
-        <a href="/login">Go to Game</a>
-        <h2>Make Changes Below</h2>
+
+{% if message %}
+<h1>{{ message }}</h1>
 {% endif %}
-<<<<<<< Updated upstream
-<form action="" method="post">
-=======
-<<<<<<< Updated upstream
-<form action="" method="post" style="width: 66%; margin: 30 auto">
-=======
-<form action="" method="post" style="width:70%; margin: 30 auto;">
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+
+{% if user  %}
+<div style="width:70%; margin: 0 auto; padding: 30px">
+  <h1>Hello! {{ user }}</h1>
+  <h1>Current Email : {{ email }}</h1>
+  <img src="/uploads/{{ picture }}" alt="">
+  <a href="/login">Go to Game</a>
+  <h2>Make Changes Below</h2>
+</div>
+
+<form action="" method="post" style="width:70%; margin: 0 auto; padding: 30px">
     <div class="form-group">
       <label for="emailChange">Change Email address</label><br>
       <input name="newemail" class="form-control" id="newemail"  placeholder="Enter a new email">
@@ -28,5 +27,7 @@
         <label for="file"></label>
         <input type=file name=file placeholder="Upload your profile picture">
     </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+{% endif %}
 {% endblock %}

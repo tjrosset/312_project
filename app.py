@@ -97,21 +97,9 @@ def login():
 
 @app.route('/uploads/<filename>')
 def uploads(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-
-<<<<<<< Updated upstream
-@app.route('/profile')
-=======
-<<<<<<< Updated upstream
-@app.route('/uploads/<filename>')
-def uploads(filename):
     return flask.send_from_directory(app.config['UPLOAD_FOLDER'],filename)
 
-@app.route('/profile', methods=["GET","POST"])
-=======
 @app.route('/profile', methods=["POST", "GET"])
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 def profile():
     if request.method == "POST":
         if 'email' in session:
@@ -122,24 +110,26 @@ def profile():
             newpassword = request.form.get("newpassword")
             picture = request.form.get("picture")
 
-            user = records.find_one({"email": email})     
+            user = records.find_one({"email": session['email']})  
+
             userid = user["_id"]
-            oldpassword = user['password']   
+            oldpassword = user['password']
+
             emailexists = records.find_one({"email": newemail})
 
             if emailexists:
                 message += "Error Email already Exists!"
             elif newemail:
                 newval = {"$set":{"email":newemail}} # query
-                records.update_one({"email": email},newval)
+                records.update_one({"email": session['email']},newval)
                 message += "New Email Successful!"
 
-            if bcrypt.checkpw(oldpassword, newpassword):
+            if bcrypt.checkpw(oldpassword.encode('utf-8'), newpassword):
                 message += "Error Old Password can't be the same as New Password!"
             elif newpassword:
                 user['password'] = bcrypt.hashpw(newpassword.encode('utf-8'), bcrypt.gensalt())
                 newval = {"$set":{"pass":hash}}
-                records.update_one({"email": email},newval)
+                records.update_one({"email": session['email']},newval)
                 message += "New Password Successful!"
 
             if 'file' not in request.files:
@@ -148,21 +138,26 @@ def profile():
                 file = request.files['file']
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER']),filename)
+
                 newval = {"$set":{"picture":filename}}
-                records.update_one({"email": email},newval)
+                records.update_one({"email": session['email']},newval)
                 message += "Picture Upload Successful!"
-            # Dark Mode
+
             return render_template('profile.html', message=message)
         else:
-            return redirect(url_for('404.html'))
+            message = "Error"
+            return render_template('profile.html', message=message)
 
     if 'email' in session:
-        username = session['username']
-        email = session['email']
-        picture = session.get('picture') # None.jpeg
-        return render_template('profile.html', user=username, email=email, picture=picture)
+        user =  records.find_one({"email": session['email']})  
+
+        if user:
+            username = user['name']
+            email = user['email']
+            return render_template('profile.html', user=username, email=email)
     
-    return render_template('profile.html')
+    message = "You're not logged In!"
+    return render_template('profile.html',message = message)
 
 @app.route('/game')
 def game():
