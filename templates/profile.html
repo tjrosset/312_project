@@ -5,6 +5,7 @@
 <h1>{{ message }}</h1>
 {% endif %}
 
+
 {% if user  %}
 <div style="width:70%; margin: 0 auto; padding: 30px">
   <h1>Hello! {{ user }}</h1>
@@ -29,5 +30,6 @@
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+<a href="/login">Return to the game</a>
 {% endif %}
 {% endblock %}

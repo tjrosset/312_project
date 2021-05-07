@@ -102,7 +102,8 @@ def login():
 def uploads(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],filename)
 
-@app.route('/profile', methods=["POST", "GET"])
+
+@app.route('/profile', methods=["GET","POST"])
 def profile():
     if request.method == "POST":
         if 'email' in session:
@@ -139,6 +140,7 @@ def profile():
 
             if 'file' not in request.files:
                 message += "No File Uploaded."
+
             elif request.files['file'].filename.rsplit('.',1)[1] in legal_extensions:
                 file = request.files['file']
                 filename = secure_filename(file.filename)
@@ -157,9 +159,13 @@ def profile():
         user =  records.find_one({"email": session['email']})  
         if user:
             username = user['name']
+            ret = username
+            ret = ret.replace('&','&amp')
+            ret = ret.replace('>','&gt')
+            ret = ret.replace('<','&lt')
             email = user['email']
             picture = user.get('picture')
-            return render_template('profile.html', user=username, email=email, picture=picture)
+            return render_template('profile.html', user=ret, email=email, picture=picture)
     
     message = "You're not logged In!"
     return render_template('profile.html',message = message)
