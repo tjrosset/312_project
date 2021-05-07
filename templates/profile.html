@@ -10,22 +10,22 @@
   <h1>Hello! {{ user }}</h1>
   <h1>Current Email : {{ email }}</h1>
   <img src="/uploads/{{ picture }}" alt="">
-  <a href="/login">Go to Game</a>
+  <h1><a href="/login">Go to Game</a></h1>
   <h2>Make Changes Below</h2>
 </div>
 
-<form action="" method="post" style="width:70%; margin: 0 auto; padding: 30px">
+<form action="" method="post" style="width:70%; margin: 0 auto; padding: 30px" enctype="multipart/form-data">
     <div class="form-group">
       <label for="emailChange">Change Email address</label><br>
       <input name="newemail" class="form-control" id="newemail"  placeholder="Enter a new email">
     </div>
     <div class="form-group">
       <label for="passwordChange">Change Password</label>
-      <input type="newpassword" name="password" class="form-control" id="newpassword" placeholder="Enter a new Password">
+      <input name="newpassword" class="form-control" id="newpassword" placeholder="Enter a new Password" type="password" >
     </div>
     <div class="form-group">
-        <label for="file"></label>
-        <input type=file name=file placeholder="Upload your profile picture">
+        <label for="file">Upload your profile picture</label>
+        <input type="file" name="file">
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>

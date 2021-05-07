@@ -1,5 +1,5 @@
 # import the Flask class from the flask module
-from flask import Flask, render_template, redirect, url_for, request, session
+from flask import Flask, render_template, redirect, url_for, request, session, send_from_directory
 import pymongo
 import bcrypt
 from flask_socketio import SocketIO
@@ -27,7 +27,10 @@ loggedInPlayers["Billy"] = player
 app = Flask(__name__)
 app.secret_key = "uyt$&%53dfJHJKru$%fg*()fit7d5"
 socketio = SocketIO(app)
-app.config['UPLOAD_FOLDER'] = '/uploads/'
+
+# base = os.path.dirname(os.path.abspath(__file__))
+# app.config['UPLOAD_FOLDER'] = os.path.join(base,'uploads')
+app.config['UPLOAD_FOLDER'] = './uploads'
 
 @app.route("/", methods=['post', 'get'])
 def index():
@@ -97,7 +100,7 @@ def login():
 
 @app.route('/uploads/<filename>')
 def uploads(filename):
-    return flask.send_from_directory(app.config['UPLOAD_FOLDER'],filename)
+    return send_from_directory(app.config['UPLOAD_FOLDER'],filename)
 
 @app.route('/profile', methods=["POST", "GET"])
 def profile():
@@ -123,21 +126,23 @@ def profile():
                 newval = {"$set":{"email":newemail}} # query
                 records.update_one({"email": session['email']},newval)
                 message += "New Email Successful!"
+                session['email'] = newemail
 
-            if bcrypt.checkpw(oldpassword.encode('utf-8'), newpassword):
-                message += "Error Old Password can't be the same as New Password!"
-            elif newpassword:
-                user['password'] = bcrypt.hashpw(newpassword.encode('utf-8'), bcrypt.gensalt())
-                newval = {"$set":{"pass":hash}}
-                records.update_one({"email": session['email']},newval)
-                message += "New Password Successful!"
+            if newpassword:
+                if bcrypt.checkpw(newpassword.encode('utf8'), oldpassword):
+                    message += "Error Old Password can't be the same as New Password!"
+                elif newpassword:
+                    hash = bcrypt.hashpw(newpassword.encode('utf-8'), bcrypt.gensalt())
+                    newval = {"$set":{"password":hash}}
+                    records.update_one({"email": session['email']},newval)
+                    message += "New Password Successful!"
 
             if 'file' not in request.files:
                 message += "No File Uploaded."
-            elif request.files['file'].rsplit('.',1)[1] in legal_extensions:
+            elif request.files['file'].filename.rsplit('.',1)[1] in legal_extensions:
                 file = request.files['file']
                 filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER']),filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
 
                 newval = {"$set":{"picture":filename}}
                 records.update_one({"email": session['email']},newval)
@@ -150,11 +155,11 @@ def profile():
 
     if 'email' in session:
         user =  records.find_one({"email": session['email']})  
-
         if user:
             username = user['name']
             email = user['email']
-            return render_template('profile.html', user=username, email=email)
+            picture = user.get('picture')
+            return render_template('profile.html', user=username, email=email, picture=picture)
     
     message = "You're not logged In!"
     return render_template('profile.html',message = message)
