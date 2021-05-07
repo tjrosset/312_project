@@ -4,21 +4,19 @@
 {% if message %}
 <h1>{{ message }}</h1>
 {% endif %}
-<<<<<<< HEAD
+
 
 {% if user  %}
 <div style="width:70%; margin: 0 auto; padding: 30px">
   <h1>Hello! {{ user }}</h1>
   <h1>Current Email : {{ email }}</h1>
   <img src="/uploads/{{ picture }}" alt="">
-  <a href="/login">Go to Game</a>
   <h2>Make Changes Below</h2>
 </div>
 
 <form action="" method="post" style="width:70%; margin: 0 auto; padding: 30px">
-=======
 <form action="" method="post" style="width: 66%; margin: 30 auto">
->>>>>>> develop
+
     <div class="form-group">
       <label for="emailChange">Change Email address</label><br>
       <input name="newemail" class="form-control" id="newemail"  placeholder="Enter a new email">
@@ -33,5 +31,6 @@
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+<a href="/login">Return to the game</a>
 {% endif %}
 {% endblock %}
