@@ -99,9 +99,6 @@ def login():
 def uploads(filename):
     return flask.send_from_directory(app.config['UPLOAD_FOLDER'],filename)
 
-@app.route('/uploads/<filename>')
-def uploads(filename):
-    return flask.send_from_directory(app.config['UPLOAD_FOLDER'],filename)
 
 @app.route('/profile', methods=["GET","POST"])
 def profile():
