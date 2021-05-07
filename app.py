@@ -4,7 +4,7 @@ import pymongo
 import bcrypt
 from flask_socketio import SocketIO
 import os
-from werkzeug.utils import secure_filename
+from uuid import uuid4
 
 
 #client = pymongo.MongoClient("mongodb://localhost:27017/")
@@ -140,10 +140,10 @@ def profile():
 
             if 'file' not in request.files:
                 message += "No File Uploaded."
-
             elif request.files['file'].filename.rsplit('.',1)[1] in legal_extensions:
                 file = request.files['file']
-                filename = secure_filename(file.filename)
+                extension = request.files['file'].filename.rsplit('.',1)[1]
+                filename = ".".join([str(uuid4()),extension])
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
 
                 newval = {"$set":{"picture":filename}}
