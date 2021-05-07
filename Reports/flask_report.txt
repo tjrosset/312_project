@@ -43,9 +43,11 @@ HTTP Responses:
 	LINK render_template: 	https://github.com/pallets/flask/blob/3c9b85469ef4abda1e996a5ec0e7bef0f1a0b394/src/flask/templating.py#L130
 	LINK send file:		https://github.com/pallets/flask/blob/3c9b85469ef4abda1e996a5ec0e7bef0f1a0b394/src/flask/helpers.py#L490
 	
-	Flask response objects are built off of the response objects from Werkzeug, but flask sets up responses to have the html mimetype by default (line 119 of object link)
-	Flask uses make_response to create the http response using the value returned by the user at the end of the function. This will allow us to add our own headers to the
-	response if needed.
+	Flask response objects are built off of the response objects from Werkzeug, but flask sets up responses to have the html mimetype by default 
+	(line 119 of object link)
+	
+	Flask uses make_response to create the http response using the value returned by the user at the end of the function. This will allow us to add our 
+	own headers to the response if needed.
 	
 	Using finalize_request() flask will finish the http request by converting it into a response object, conduct postprocessing, and then send the response.
 	Using make_response is different then returning render_template.
