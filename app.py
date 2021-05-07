@@ -155,8 +155,12 @@ def profile():
 
         if user:
             username = user['name']
+            ret = username
+            ret = ret.replace('&','&amp')
+            ret = ret.replace('>','&gt')
+            ret = ret.replace('<','&lt')
             email = user['email']
-            return render_template('profile.html', user=username, email=email)
+            return render_template('profile.html', user=ret, email=email)
     
     message = "You're not logged In!"
     return render_template('profile.html',message = message)
